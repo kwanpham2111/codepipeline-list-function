@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -11,8 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
-	"github.com/aws/aws-sdk-go-v2/service/cloudwatch/types"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
@@ -32,33 +29,11 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		}, nil
 	}
 
-	cw := cloudwatch.NewFromConfig(cfg)
-
 	svc := dynamodb.NewFromConfig(cfg)
 	out, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
-		TableName: aws.String("book"),
+		TableName: aws.String("books"),
 	})
 	if err != nil {
-		log.Println("err: " + err.Error())
-
-		input := &cloudwatch.PutMetricDataInput{
-			Namespace: aws.String("Lambda"),
-			MetricData: []types.MetricDatum{
-				{
-					MetricName: aws.String("FailedConnectToDynamoDB"),
-					Unit:       types.StandardUnitSeconds,
-					Value:      aws.Float64(1.0),
-					Dimensions: []types.Dimension{
-						{
-							Name:  aws.String("env"),
-							Value: aws.String("staging"),
-						},
-					},
-				},
-			},
-		}
-		cw.PutMetricData(context.TODO(), input)
-
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
