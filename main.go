@@ -23,7 +23,7 @@ type Book struct {
 }
 
 func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	ctx, root := xray.BeginSegment(context.TODO(), "AWSSDKV2_Dynamodb")
+	ctx, root := xray.BeginSegment(context.TODO(), "books_list")
 	defer root.Close(nil)
 
 	cfg, err := config.LoadDefaultConfig(ctx)
