@@ -42,7 +42,7 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		log.Println("err: " + err.Error())
 
 		input := &cloudwatch.PutMetricDataInput{
-			Namespace: aws.String("LambdaBookList"),
+			Namespace: aws.String("Lambda"),
 			MetricData: []types.MetricDatum{
 				{
 					MetricName: aws.String("FailedConnectToDynamoDB"),
