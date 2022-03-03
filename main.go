@@ -11,8 +11,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/aws/aws-xray-sdk-go/instrumentation/awsv2"
-	"github.com/aws/aws-xray-sdk-go/xray"
 )
 
 type Book struct {
@@ -22,11 +20,8 @@ type Book struct {
 	Image  string `json:"image"`
 }
 
-func list(context context.Context) (events.APIGatewayProxyResponse, error) {
-	ctx, root := xray.BeginSubsegment(context, "books_list")
-	defer root.Close(nil)
-
-	cfg, err := config.LoadDefaultConfig(ctx)
+func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
@@ -34,9 +29,8 @@ func list(context context.Context) (events.APIGatewayProxyResponse, error) {
 		}, nil
 	}
 
-	awsv2.AWSV2Instrumentor(&cfg.APIOptions)
 	svc := dynamodb.NewFromConfig(cfg)
-	out, err := svc.Scan(ctx, &dynamodb.ScanInput{
+	out, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
 		TableName: aws.String("books"),
 	})
 	if err != nil {
