@@ -22,8 +22,8 @@ type Book struct {
 	Image  string `json:"image"`
 }
 
-func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	ctx, root := xray.BeginSegment(context.TODO(), "books_list")
+func list(req events.APIGatewayProxyRequest, context context.Context) (events.APIGatewayProxyResponse, error) {
+	ctx, root := xray.BeginSubsegment(context, "books_list")
 	defer root.Close(nil)
 
 	cfg, err := config.LoadDefaultConfig(ctx)
