@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -34,6 +35,8 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		TableName: aws.String("book"),
 	})
 	if err != nil {
+		log.Println("err: " + err.Error())
+
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
