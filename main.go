@@ -22,8 +22,8 @@ type Book struct {
 	Image  string `json:"image"`
 }
 
-func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	ctx, root := xray.BeginSegment(context.TODO(), "AWSSDKV2_Dynamodb")
+func list(context context.Context) (events.APIGatewayProxyResponse, error) {
+	ctx, root := xray.BeginSegment(context, "AWSSDKV2_Dynamodb")
 	defer root.Close(nil)
 
 	cfg, err := config.LoadDefaultConfig(ctx)
