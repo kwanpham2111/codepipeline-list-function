@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -31,9 +32,11 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 
 	svc := dynamodb.NewFromConfig(cfg)
 	out, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
-		TableName: aws.String("books"),
+		TableName: aws.String("book"),
 	})
 	if err != nil {
+		log.Fatal(err.Error())
+
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
