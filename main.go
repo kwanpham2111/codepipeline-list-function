@@ -57,10 +57,7 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 				},
 			},
 		}
-		_, err := cw.PutMetricData(context.TODO(), input)
-		if err != nil {
-			log.Println("err metrics: " + err.Error())
-		}
+		cw.PutMetricData(context.TODO(), input)
 
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
