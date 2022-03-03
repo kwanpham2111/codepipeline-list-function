@@ -22,7 +22,7 @@ type Book struct {
 	Image  string `json:"image"`
 }
 
-func list(req events.APIGatewayProxyRequest, context context.Context) (events.APIGatewayProxyResponse, error) {
+func list(context context.Context) (events.APIGatewayProxyResponse, error) {
 	ctx, root := xray.BeginSubsegment(context, "books_list")
 	defer root.Close(nil)
 
